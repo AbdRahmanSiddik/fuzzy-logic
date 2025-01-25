@@ -37,8 +37,8 @@ def fuzzyfikasi_permintaan(permintaan):
     # Keanggotaan Sedang
     if 10 < permintaan <= 20:
         sedang = (permintaan - 10) / (20 - 10)
-    elif 20 < permintaan <= 30:
-        sedang = (30 - permintaan) / (30 - 20)
+    elif 20 < permintaan <= 40:
+        sedang = (40 - permintaan) / (40 - 20)
     else:
         sedang = 0
 
@@ -84,10 +84,21 @@ def rule_base(fuzzy_stok, fuzzy_permintaan):
     return rules
 
 def defuzzyfikasi(rule_outputs):
-    # total numerik (sigma(mu * z)) / sigma(mu)
-    total_numerik = sum(mu * z for mu, z in rule_outputs)
-    total_mu = sum(mu for mu, z in rule_outputs)
-    z = total_numerik / total_mu
+    # Group by unique stock and demand values, and find the max mu for each group
+    max_mu_values = {}
+    
+    for mu, z in rule_outputs:
+        if z not in max_mu_values:
+            max_mu_values[z] = mu
+        else:
+            max_mu_values[z] = max(max_mu_values[z], mu)
+    
+    # Calculate the total numerator and denominator using max mu values
+    total_numerik = sum(mu * z for z, mu in max_mu_values.items())
+    total_mu = sum(max_mu_values.values())
+    
+    # Calculate the defuzzified value
+    z = total_numerik / total_mu if total_mu != 0 else 0
     return z
 
 def kategori_produksi(hasil):
