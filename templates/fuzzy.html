@@ -1,0 +1,132 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2>Fuzzy Logic Input</h2>
+        <form action="/fuzzy" method="POST">
+          <div class="mb-3">
+            <label for="stok" class="form-label">Stok</label>
+            <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukkan stok" required>
+          </div>
+          <div class="mb-3">
+            <label for="permintaan" class="form-label">Permintaan</label>
+            <input type="number" class="form-control" id="permintaan" name="permintaan" placeholder="Masukkan permintaan" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Hitung</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h2>Fuzzy Output</h2>
+        <ul class="list-group list-group-numbered mt-5 mb-5">
+          <li class="list-group-item ">Jumlah Stok : {{ jumlah_stok }} </li>
+          <li class="list-group-item">Jumlah Permintaan : {{ permintaan }}</li>
+          <li class="list-group-item ">Produksi ({{ kategori }}) : {{ produksi }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 mb-3">
+    <div class="card">
+      <div class="card-header">
+        <h2>Proses</h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h4>Fuzzy Stok Derajat Keanggotaan</h4>
+                <ul class="list-group list-group-numbered mt-4 mb-4">
+                  <li class="list-group-item">Minim : {{ fuzzy_stok.minim }}</li>
+                  <li class="list-group-item">Sedang : {{ fuzzy_stok.sedang }}</li>
+                  <li class="list-group-item">Banyak : {{ fuzzy_stok.banyak }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h4>Fuzzy Permintaan Keanggotaan</h4>
+                <ul class="list-group list-group-numbered mt-4 mb-4">
+                  <li class="list-group-item">Rendah : {{ fuzzy_permintaan.rendah }}</li>
+                  <li class="list-group-item">Sedang : {{ fuzzy_permintaan.sedang }}</li>
+                  <li class="list-group-item">Tinggi : {{ fuzzy_permintaan.tinggi }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h4>Fuzzy Produksi (mu z)</h4>
+                <ul class="list-group list-group-numbered">
+                  <li class="list-group-item">Tidak Produksi : 0</li>
+                  <li class="list-group-item">Produksi Kecil : 10</li>
+                  <li class="list-group-item">Produksi Sedang : 25</li>
+                  <li class="list-group-item">Produksi Besar : 40</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h4>Rulebase & Inferensi</h4>
+                <ul class="list-group list-group-numbered">
+                  {% for val1, val2 in rules %}
+                    {% if val2 == 0 %}
+                    <li class="list-group-item">Tidak Produksi: {{ val1 }}, z : {{ val2 }}</li>
+                    {% elif val2 == 10 %}
+                    <li class="list-group-item">Produksi Kecil: {{ val1 }}, z : {{ val2 }}</li>
+                    {% elif val2 == 25 %}
+                    <li class="list-group-item">Produksi Sedang: {{ val1 }}, z : {{ val2 }}</li>
+                    {% elif val2 == 40 %}
+                    <li class="list-group-item">Produksi Besar: {{ val1 }}, z : {{ val2 }}</li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>                              
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <div class="card">
+                      <div class="card-body">
+                        <img width="100%" src="{{ url_for('static', filename='fuzzy_plot.png') }}" alt="Fuzzy Stok">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="card">
+                      <div class="card-body">
+                        <img width="100%" src="{{ url_for('static', filename='fuzzy_permin.png') }}" alt="Fuzzy Stok">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 mb-3">
+                    <div class="card">
+                      <div class="card-body">
+                        <img width="100%" src="{{ url_for('static', filename='fuzzy_output.png') }}" alt="Fuzzy Stok">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
