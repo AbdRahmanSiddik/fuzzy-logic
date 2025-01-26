@@ -102,9 +102,9 @@ def defuzzyfikasi(rule_outputs):
     return z
 
 def kategori_produksi(hasil):
-    if hasil == 0:
+    if hasil  < 5 :
         return "Tidak Produksi"
-    elif 0 < hasil <= 10:
+    elif 5 < hasil <= 10:
         return "Produksi Kecil"
     elif 10 < hasil <= 25:
         return "Produksi Sedang"
